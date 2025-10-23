@@ -27,11 +27,18 @@ import 'package:flutter/material.dart'
         ThemeData,
         ValueNotifier;
 
+abstract class ThemeStorageAdapter {
+  Future<void> saveTheme(String themeName);
+  Future<String?> loadTheme();
+}
+
 class ThemeManager {
   static final ThemeManager _instance = ThemeManager._internal();
   late ValueNotifier<ThemeData> themeNotifier;
   final Map<String, ThemeData> _themes = {};
-  String _currentThemeName = 'light';
+  final String _currentThemeName = 'light';
+  ThemeStorageAdapter? _storageAdapter;
+  bool _initialized = false;
 
   static ThemeManager get instance => _instance;
   static ThemeData get currentTheme => _instance.themeNotifier.value;
@@ -47,30 +54,52 @@ class ThemeManager {
     themeNotifier = ValueNotifier(_themes['light']!);
   }
 
-  static Future<void> setTheme(String name) async {
+  static Future<void> initialize({ThemeStorageAdapter? storageAdapter}) async {
+    if (_instance._initialized) return;
+
+    _instance._storageAdapter = storageAdapter;
+
+    _instance._themes['light'] = ThemeData.light();
+    _instance._themes['dark'] = ThemeData.dark();
+
+    String? lastTheme;
+
+    if (storageAdapter != null) {
+      lastTheme = await storageAdapter.loadTheme();
+    }
+
+    final theme = _instance._themes[lastTheme] ?? _instance._themes['light']!;
+    _instance.themeNotifier.value = theme;
+
+    _instance._initialized = true;
+  }
+
+  static void setTheme(String name) async {
     final theme = _instance._themes[name];
 
-    if (theme != null) {
-      _instance.themeNotifier.value = theme;
-      _instance._currentThemeName = name;
-    } else {
-      throw Exception(
-        'Theme "$name" not found. Available themes: ${availableThemes.join(", ")}',
-      );
+    if (theme == null) return;
+
+    _instance.themeNotifier.value = theme;
+
+    if (_instance._storageAdapter != null) {
+      await _instance._storageAdapter!.saveTheme(name);
     }
   }
 
   static Future<void> toggleTheme() async {
     final isLight =
         _instance.themeNotifier.value.brightness == Brightness.light;
+
     final newTheme = isLight ? 'dark' : 'light';
-    await setTheme(newTheme);
+
+    setTheme(newTheme);
   }
 
   static void removeTheme(String name) {
     if (name == 'light' || name == 'dark') {
       throw Exception('Cannot remove default themes');
     }
+
     _instance._themes.remove(name);
   }
 
