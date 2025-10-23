@@ -29,11 +29,11 @@ import 'package:flutter/material.dart'
 
 class ThemeManager {
   static final ThemeManager _instance = ThemeManager._internal();
-  static ThemeManager get instance => _instance;
   late ValueNotifier<ThemeData> themeNotifier;
   final Map<String, ThemeData> _themes = {};
   String _currentThemeName = 'light';
 
+  static ThemeManager get instance => _instance;
   static ThemeData get currentTheme => _instance.themeNotifier.value;
   static String get currentThemeName => _instance._currentThemeName;
   static List<String> get availableThemes => _instance._themes.keys.toList();
