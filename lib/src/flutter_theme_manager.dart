@@ -36,7 +36,7 @@ class ThemeManager {
   static final ThemeManager _instance = ThemeManager._internal();
   late ValueNotifier<ThemeData> themeNotifier;
   final Map<String, ThemeData> _themes = {};
-  final String _currentThemeName = 'light';
+  String _currentThemeName = 'light';
   ThemeStorageAdapter? _storageAdapter;
   bool _initialized = false;
 
@@ -80,6 +80,7 @@ class ThemeManager {
     if (theme == null) return;
 
     _instance.themeNotifier.value = theme;
+    _instance._currentThemeName = name;
 
     if (_instance._storageAdapter != null) {
       await _instance._storageAdapter!.saveTheme(name);
@@ -161,19 +162,16 @@ class ThemeManager {
             surfaceColor ?? (isLight ? Colors.white : const Color(0xFF1E1E1E)),
         onSurface: textColor ?? (isLight ? Colors.black : Colors.white),
       ),
-
       appBarTheme: AppBarTheme(
         backgroundColor: appBarColor,
         foregroundColor: textColor,
         elevation: elevation,
       ),
-
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: fabColor,
         foregroundColor: textColor,
         elevation: elevation,
       ),
-
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: buttonColor,
@@ -185,14 +183,12 @@ class ThemeManager {
           textStyle: buttonTextStyle,
         ),
       ),
-
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: secondaryColor,
           textStyle: TextStyle(fontWeight: fontWeight, fontFamily: fontFamily),
         ),
       ),
-
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: secondaryColor,
@@ -202,7 +198,6 @@ class ThemeManager {
           ),
         ),
       ),
-
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: inputFillColor,
@@ -220,7 +215,6 @@ class ThemeManager {
           borderSide: BorderSide(color: primaryColor, width: 2),
         ),
       ),
-
       cardTheme: CardThemeData(
         color: cardColor,
         elevation: elevation,
@@ -228,9 +222,7 @@ class ThemeManager {
           borderRadius: BorderRadius.circular(borderRadius ?? 12),
         ),
       ),
-
       textTheme: TextTheme(headlineLarge: headlineStyle, bodyLarge: bodyStyle),
-
       splashFactory: (useRippleEffect ?? true)
           ? InkRipple.splashFactory
           : NoSplash.splashFactory,
