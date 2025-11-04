@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_theme_manager/flutter_theme_manager.dart';
+import 'package:flutter_theme_manager/themed_app.dart';
 
 /// Basic Example - The simplest possible implementation
 ///

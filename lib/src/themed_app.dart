@@ -12,7 +12,8 @@ import 'package:flutter/material.dart'
         ValueListenableBuilder,
         Widget,
         WidgetBuilder;
-import 'package:flutter_theme_manager/src/flutter_theme_manager.dart';
+
+import 'flutter_theme_manager.dart' show ThemeManager;
 
 class ThemedApp extends StatelessWidget {
   final String title;
