@@ -17,6 +17,7 @@ import 'flutter_theme_manager.dart' show ThemeManager;
 
 class ThemedApp extends StatelessWidget {
   final String title;
+  final String? fontFamily;
   final Widget? home;
   final Map<String, WidgetBuilder>? routes;
   final String? initialRoute;
@@ -37,6 +38,7 @@ class ThemedApp extends StatelessWidget {
   const ThemedApp({
     super.key,
     required this.title,
+    this.fontFamily,
     this.home,
     this.routes,
     this.initialRoute,
@@ -62,7 +64,8 @@ class ThemedApp extends StatelessWidget {
       builder: (context, theme, _) {
         return MaterialApp(
           title: title,
-          theme: theme,
+          theme:
+              ThemeData(brightness: theme.brightness, fontFamily: fontFamily),
           home: home,
           routes: routes ?? {},
           initialRoute: initialRoute,

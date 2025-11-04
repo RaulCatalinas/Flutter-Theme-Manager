@@ -28,7 +28,7 @@ import 'package:flutter/material.dart'
         ValueNotifier;
 
 abstract class ThemeStorageAdapter {
-  Future<void> saveTheme(String themeName);
+  void saveTheme(String themeName);
   Future<String?> loadTheme();
 }
 
@@ -83,7 +83,7 @@ class ThemeManager {
     _instance._currentThemeName = name;
 
     if (_instance._storageAdapter != null) {
-      await _instance._storageAdapter!.saveTheme(name);
+      _instance._storageAdapter!.saveTheme(name);
     }
   }
 
