@@ -1,12 +1,12 @@
 name: flutter_theme_manager
 description: "A Flutter theme management library that works out of the box — providing seamless light, dark, and custom theme switching with persistent user preferences. Fully configurable and easily integrated into any Flutter application."
 version: 1.0.0
-homepage: https://github.com/RaulCatalinas/Flutter-Theme-Manager
 repository: https://github.com/RaulCatalinas/Flutter-Theme-Manager
 
 environment:
-  sdk: ^3.9.2
-  flutter: ">=1.17.0"
+  sdk: ^3.5.0
+  flutter: ">=3.24.0"
+
 
 dependencies:
   flutter:
