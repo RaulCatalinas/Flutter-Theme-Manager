@@ -64,8 +64,11 @@ class ThemedApp extends StatelessWidget {
       builder: (context, theme, _) {
         return MaterialApp(
           title: title,
-          theme:
-              ThemeData(brightness: theme.brightness, fontFamily: fontFamily),
+          theme: theme.copyWith(
+            textTheme: theme.textTheme.apply(
+              fontFamily: fontFamily,
+            ),
+          ),
           home: home,
           routes: routes ?? {},
           initialRoute: initialRoute,
