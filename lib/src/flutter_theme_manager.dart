@@ -49,8 +49,8 @@ class ThemeManager {
   factory ThemeManager() => _instance;
 
   ThemeManager._internal() {
-    _themes['light'] = ThemeData.light(useMaterial3: true);
-    _themes['dark'] = ThemeData.dark(useMaterial3: true);
+    _themes['light'] = ThemeData.light();
+    _themes['dark'] = ThemeData.dark();
     themeNotifier = ValueNotifier(_themes['light']!);
   }
 
@@ -88,7 +88,7 @@ class ThemeManager {
     }
   }
 
-  static Future<void> toggleTheme() async {
+  static void toggleTheme() async {
     final isLight =
         _instance.themeNotifier.value.brightness == Brightness.light;
 
