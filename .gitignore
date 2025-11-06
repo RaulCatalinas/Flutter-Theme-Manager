@@ -28,3 +28,5 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 /build/
 /coverage/
+
+mock_theme_storage.json

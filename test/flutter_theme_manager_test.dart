@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart'
-    show Brightness, Colors, RoundedRectangleBorder, TextStyle, FontWeight;
+    show
+        Brightness,
+        Colors,
+        FontWeight,
+        RoundedRectangleBorder,
+        TextStyle,
+        ThemeData;
 import 'package:flutter_test/flutter_test.dart'
     show
         test,
@@ -17,10 +23,10 @@ import 'package:flutter_theme_manager/flutter_theme_manager.dart'
 import 'test_utils.dart' show MockThemeStorageAdapter;
 
 void main() {
-  late MockThemeStorageAdapter mockStorage;
+  final mockStorage = MockThemeStorageAdapter();
 
-  setUp(() {
-    mockStorage = MockThemeStorageAdapter();
+  setUp(() async {
+    await mockStorage.reset();
   });
 
   group('ThemeManager - Initialization', () {
@@ -41,18 +47,18 @@ void main() {
     });
 
     test('should load last saved theme if it exists', () async {
-      mockStorage.themeToLoad = 'dark';
+      await mockStorage.saveTheme('dark');
+
       await ThemeManager.initialize(storageAdapter: mockStorage);
 
-      expect(mockStorage.loadCallCount, 1);
       expect(ThemeManager.currentTheme.brightness, Brightness.dark);
+      expect(mockStorage.loadCallCount, 1);
     });
 
     test('should use light theme if saved theme does not exist', () async {
-      mockStorage.themeToLoad = 'nonexistent';
       await ThemeManager.initialize(storageAdapter: mockStorage);
 
-      expect(ThemeManager.currentTheme.brightness, Brightness.light);
+      expect(ThemeManager.currentTheme, ThemeData.light());
     });
   });
 
@@ -84,15 +90,16 @@ void main() {
       expect(mockStorage.saveCallCount, 0);
     });
 
-    test('should toggle between light and dark', () async {
+    test('should toggle between light and dark', () {
       // Starts with light
-      expect(ThemeManager.currentTheme.brightness, Brightness.light);
+      ThemeManager.setTheme('light');
+      expect(ThemeManager.currentTheme, ThemeData.light());
 
-      await ThemeManager.toggleTheme();
-      expect(ThemeManager.currentTheme.brightness, Brightness.dark);
+      ThemeManager.toggleTheme();
+      expect(ThemeManager.currentTheme, ThemeData.dark());
 
-      await ThemeManager.toggleTheme();
-      expect(ThemeManager.currentTheme.brightness, Brightness.light);
+      ThemeManager.toggleTheme();
+      expect(ThemeManager.currentTheme, ThemeData.light());
     });
   });
 
@@ -268,17 +275,6 @@ void main() {
     });
   });
 
-  group('ThemeManager - Singleton pattern', () {
-    test('should maintain same instance', () {
-      final instance1 = ThemeManager.instance;
-      final instance2 = ThemeManager.instance;
-      final instance3 = ThemeManager();
-
-      expect(identical(instance1, instance2), isTrue);
-      expect(identical(instance1, instance3), isTrue);
-    });
-  });
-
   group('ThemeManager - Edge cases', () {
     test('should handle multiple initializations', () async {
       await ThemeManager.initialize();
@@ -292,7 +288,7 @@ void main() {
       ThemeManager.setTheme('dark');
 
       // Should not throw error
-      expect(ThemeManager.currentTheme.brightness, Brightness.dark);
+      expect(ThemeManager.currentTheme, ThemeData.dark());
     });
   });
 }

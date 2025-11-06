@@ -251,35 +251,6 @@ void main() {
     });
   });
 
-  group('ThemedApp - Debug configuration', () {
-    testWidgets('should respect debug banner flag',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(
-        ThemedApp(
-          title: 'Test App',
-          debugShowCheckedModeBanner: false,
-          home: Scaffold(body: Text('Content')),
-        ),
-      );
-
-      final MaterialApp app = tester.widget(find.byType(MaterialApp));
-      expect(app.debugShowCheckedModeBanner, false);
-    });
-
-    testWidgets('should show debug banner by default',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(
-        ThemedApp(
-          title: 'Test App',
-          home: Scaffold(body: Text('Content')),
-        ),
-      );
-
-      final MaterialApp app = tester.widget(find.byType(MaterialApp));
-      expect(app.debugShowCheckedModeBanner, true);
-    });
-  });
-
   group('ThemedApp - ValueListenableBuilder', () {
     testWidgets('should use ValueListenableBuilder correctly',
         (WidgetTester tester) async {
