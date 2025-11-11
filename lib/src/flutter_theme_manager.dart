@@ -38,7 +38,6 @@ class ThemeManager {
   final Map<String, ThemeData> _themes = {};
   String _currentThemeName = 'light';
   ThemeStorageAdapter? _storageAdapter;
-  bool _initialized = false;
 
   static ThemeManager get instance => _instance;
   static ThemeData get currentTheme => _instance.themeNotifier.value;
@@ -55,8 +54,6 @@ class ThemeManager {
   }
 
   static Future<void> initialize({ThemeStorageAdapter? storageAdapter}) async {
-    if (_instance._initialized) return;
-
     _instance._storageAdapter = storageAdapter;
 
     _instance._themes['light'] = ThemeData.light();
@@ -71,8 +68,6 @@ class ThemeManager {
     final theme = _instance._themes[lastTheme] ?? _instance._themes['light']!;
     _instance.themeNotifier.value = theme;
     _instance._currentThemeName = lastTheme ?? 'light';
-
-    _instance._initialized = true;
   }
 
   static void setTheme(String name) async {
