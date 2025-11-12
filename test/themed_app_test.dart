@@ -18,6 +18,11 @@ import 'package:flutter/material.dart'
         Theme,
         ThemeData,
         ValueListenableBuilder;
+import 'package:flutter_localizations/flutter_localizations.dart'
+    show
+        GlobalCupertinoLocalizations,
+        GlobalMaterialLocalizations,
+        GlobalWidgetsLocalizations;
 import 'package:flutter_test/flutter_test.dart'
     show
         WidgetTester,
@@ -31,13 +36,14 @@ import 'package:flutter_test/flutter_test.dart'
         isNot,
         setUp,
         testWidgets;
-import 'package:flutter_theme_manager/flutter_theme_manager.dart';
-import 'package:flutter_theme_manager/themed_app.dart';
+import 'package:flutter_theme_manager/flutter_theme_manager.dart'
+    show ThemeManager;
+import 'package:flutter_theme_manager/src/themed_app.dart' show ThemedApp;
 
 void main() {
   setUp(() async {
-    // Initialize ThemeManager before each test
     await ThemeManager.initialize();
+    ThemeManager.clearCustomThemes();
   });
 
   group('ThemedApp - Basic construction', () {
@@ -128,47 +134,49 @@ void main() {
       expect(find.text('Brightness: dark'), findsOneWidget);
     });
 
-    testWidgets('should update colors when theme changes',
-        (WidgetTester tester) async {
-      // Create custom theme
-      ThemeManager.createTheme(
-        name: 'purple',
-        primaryColor: Colors.purple,
-        secondaryColor: Colors.amber,
-        brightness: Brightness.light,
-      );
+    testWidgets(
+      'should update colors when theme changes',
+      (WidgetTester tester) async {
+        // Create custom theme
+        ThemeManager.createTheme(
+          name: 'purple',
+          primaryColor: Colors.purple,
+          secondaryColor: Colors.amber,
+          brightness: Brightness.light,
+        );
 
-      ThemeManager.setTheme('light');
+        ThemeManager.setTheme('light');
 
-      await tester.pumpWidget(
-        ThemedApp(
-          title: 'Test App',
-          home: Builder(
-            builder: (context) {
-              return Scaffold(
-                appBar: AppBar(title: Text('Title')),
-                body: Text('Content'),
-              );
-            },
+        await tester.pumpWidget(
+          ThemedApp(
+            title: 'Test App',
+            home: Builder(
+              builder: (context) {
+                return Scaffold(
+                  appBar: AppBar(title: Text('Title')),
+                  body: Text('Content'),
+                );
+              },
+            ),
           ),
-        ),
-      );
+        );
 
-      await tester.pumpAndSettle();
+        await tester.pumpAndSettle();
 
-      var context = tester.element(find.text('Content'));
-      var initialPrimary = Theme.of(context).colorScheme.primary;
+        var context = tester.element(find.text('Content'));
+        var initialPrimary = Theme.of(context).colorScheme.primary;
 
-      // Change to custom theme
-      ThemeManager.setTheme('purple');
-      await tester.pumpAndSettle();
+        // Change to custom theme
+        ThemeManager.setTheme('purple');
+        await tester.pumpAndSettle();
 
-      context = tester.element(find.text('Content'));
-      var newPrimary = Theme.of(context).colorScheme.primary;
+        context = tester.element(find.text('Content'));
+        var newPrimary = Theme.of(context).colorScheme.primary;
 
-      expect(newPrimary, Colors.purple);
-      expect(newPrimary, isNot(equals(initialPrimary)));
-    });
+        expect(newPrimary, Colors.purple);
+        expect(newPrimary, isNot(equals(initialPrimary)));
+      },
+    );
   });
 
   group('ThemedApp - Routes and navigation', () {
@@ -197,38 +205,40 @@ void main() {
       expect(find.text('Second'), findsOneWidget);
     });
 
-    testWidgets('should maintain theme during navigation',
-        (WidgetTester tester) async {
-      ThemeManager.setTheme('dark');
+    testWidgets(
+      'should maintain theme during navigation',
+      (WidgetTester tester) async {
+        ThemeManager.setTheme('dark');
 
-      await tester.pumpWidget(
-        ThemedApp(
-          title: 'Test App',
-          routes: {
-            '/': (context) => Scaffold(
-                  body: ElevatedButton(
-                    onPressed: () => Navigator.pushNamed(context, '/second'),
-                    child: Text('Go'),
+        await tester.pumpWidget(
+          ThemedApp(
+            title: 'Test App',
+            routes: {
+              '/': (context) => Scaffold(
+                    body: ElevatedButton(
+                      onPressed: () => Navigator.pushNamed(context, '/second'),
+                      child: Text('Go'),
+                    ),
                   ),
-                ),
-            '/second': (context) => Scaffold(
-                  body: Text('Second Screen'),
-                ),
-          },
-        ),
-      );
+              '/second': (context) => Scaffold(
+                    body: Text('Second Screen'),
+                  ),
+            },
+          ),
+        );
 
-      await tester.pumpAndSettle();
+        await tester.pumpAndSettle();
 
-      var context = tester.element(find.text('Go'));
-      expect(Theme.of(context).brightness, Brightness.dark);
+        var context = tester.element(find.text('Go'));
+        expect(Theme.of(context).brightness, Brightness.dark);
 
-      await tester.tap(find.text('Go'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Go'));
+        await tester.pumpAndSettle();
 
-      context = tester.element(find.text('Second Screen'));
-      expect(Theme.of(context).brightness, Brightness.dark);
-    });
+        context = tester.element(find.text('Second Screen'));
+        expect(Theme.of(context).brightness, Brightness.dark);
+      },
+    );
   });
 
   group('ThemedApp - Localization', () {
@@ -236,131 +246,144 @@ void main() {
       await tester.pumpWidget(
         ThemedApp(
           title: 'Test App',
-          locale: Locale('es', 'ES'),
+          locale: Locale('en'),
+          localizationsDelegates: [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
           supportedLocales: [
-            Locale('en', 'US'),
-            Locale('es', 'ES'),
+            Locale('en'),
+            Locale('es'),
           ],
           home: Scaffold(body: Text('Content')),
         ),
       );
 
       final MaterialApp app = tester.widget(find.byType(MaterialApp));
-      expect(app.locale, Locale('es', 'ES'));
-      expect(app.supportedLocales, contains(Locale('es', 'ES')));
+      expect(app.locale, Locale('en'));
+      expect(app.supportedLocales, contains(Locale('es')));
     });
   });
 
   group('ThemedApp - ValueListenableBuilder', () {
-    testWidgets('should use ValueListenableBuilder correctly',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(
-        ThemedApp(
-          title: 'Test App',
-          home: Scaffold(body: Text('Content')),
-        ),
-      );
-
-      expect(find.byType(ValueListenableBuilder<ThemeData>), findsOneWidget);
-    });
-
-    testWidgets('should rebuild only when theme changes',
-        (WidgetTester tester) async {
-      int buildCount = 0;
-
-      await tester.pumpWidget(
-        ThemedApp(
-          title: 'Test App',
-          home: Builder(
-            builder: (context) {
-              buildCount++;
-              return Scaffold(
-                body: Text('Build count: $buildCount'),
-              );
-            },
+    testWidgets(
+      'should use ValueListenableBuilder correctly',
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          ThemedApp(
+            title: 'Test App',
+            home: Scaffold(body: Text('Content')),
           ),
-        ),
-      );
+        );
 
-      await tester.pumpAndSettle();
-      final initialBuildCount = buildCount;
+        expect(find.byType(ValueListenableBuilder<ThemeData>), findsOneWidget);
+      },
+    );
 
-      // Pump without changing theme should not rebuild
-      await tester.pump();
-      expect(buildCount, initialBuildCount);
+    testWidgets(
+      'should rebuild only when theme changes',
+      (WidgetTester tester) async {
+        int buildCount = 0;
 
-      // Changing theme should rebuild
-      ThemeManager.setTheme('dark');
-      await tester.pumpAndSettle();
-      expect(buildCount, greaterThan(initialBuildCount));
-    });
+        await tester.pumpWidget(
+          ThemedApp(
+            title: 'Test App',
+            home: Builder(
+              builder: (context) {
+                buildCount++;
+                return Scaffold(
+                  body: Text('Build count: $buildCount'),
+                );
+              },
+            ),
+          ),
+        );
+
+        await tester.pumpAndSettle();
+
+        final initialBuildCount = buildCount;
+
+        await tester.pump();
+
+        expect(buildCount, initialBuildCount);
+
+        ThemeManager.setTheme('dark');
+
+        await tester.pump();
+
+        expect(buildCount, greaterThan(initialBuildCount));
+      },
+    );
   });
 
   group('ThemedApp - Complete integration', () {
-    testWidgets('should work in a complete real scenario',
-        (WidgetTester tester) async {
-      // Create custom theme
-      ThemeManager.createTheme(
-        name: 'ocean',
-        primaryColor: Colors.blue,
-        secondaryColor: Colors.teal,
-        brightness: Brightness.light,
-        borderRadius: 16.0,
-      );
+    testWidgets(
+      'should work in a complete real scenario',
+      (WidgetTester tester) async {
+        // Create custom theme
+        ThemeManager.createTheme(
+          name: 'ocean',
+          primaryColor: Colors.blue,
+          secondaryColor: Colors.teal,
+          brightness: Brightness.light,
+          borderRadius: 16.0,
+        );
 
-      await tester.pumpWidget(
-        ThemedApp(
-          title: 'Ocean App',
-          home: Builder(
-            builder: (context) {
-              return Scaffold(
-                appBar: AppBar(
-                  title: Text('Home'),
-                  actions: [
-                    IconButton(
-                      icon: Icon(Icons.brightness_6),
-                      onPressed: () {
-                        ThemeManager.toggleTheme();
-                      },
-                    ),
-                  ],
-                ),
-                body: Column(
-                  children: [
-                    Text('Welcome'),
-                    ElevatedButton(
-                      onPressed: () {
-                        ThemeManager.setTheme('ocean');
-                      },
-                      child: Text('Ocean Theme'),
-                    ),
-                  ],
-                ),
-              );
-            },
+        await tester.pumpWidget(
+          ThemedApp(
+            title: 'Ocean App',
+            home: Builder(
+              builder: (context) {
+                return Scaffold(
+                  appBar: AppBar(
+                    title: Text('Home'),
+                    actions: [
+                      IconButton(
+                        icon: Icon(Icons.brightness_6),
+                        onPressed: () {
+                          ThemeManager.toggleTheme();
+                        },
+                      ),
+                    ],
+                  ),
+                  body: Column(
+                    children: [
+                      Text('Welcome'),
+                      ElevatedButton(
+                        onPressed: () {
+                          ThemeManager.setTheme('ocean');
+                        },
+                        child: Text('Ocean Theme'),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
-        ),
-      );
+        );
 
-      await tester.pumpAndSettle();
+        await tester.pumpAndSettle();
 
-      // Verify initial state
-      expect(find.text('Welcome'), findsOneWidget);
-      expect(find.text('Ocean Theme'), findsOneWidget);
+        // Verify initial state
+        expect(find.text('Welcome'), findsOneWidget);
+        expect(find.text('Ocean Theme'), findsOneWidget);
 
-      // Change to ocean theme
-      await tester.tap(find.text('Ocean Theme'));
-      await tester.pumpAndSettle();
+        // Change to ocean theme
+        await tester.tap(find.text('Ocean Theme'));
+        await tester.pumpAndSettle();
 
-      var context = tester.element(find.text('Welcome'));
-      expect(Theme.of(context).colorScheme.primary, Colors.blue);
+        var context = tester.element(find.text('Welcome'));
+        expect(Theme.of(context).colorScheme.primary, Colors.blue);
 
-      // Toggle theme
-      await tester.tap(find.byIcon(Icons.brightness_6));
-      await tester.pumpAndSettle();
+        // Toggle theme
+        await tester.tap(find.byIcon(Icons.brightness_6));
+        await tester.pumpAndSettle();
 
-      context = tester.element(find.text('Welcome'));
-      expect(Theme.of(context).brightness, Brightness.dark);
-    });
+        context = tester.element(find.text('Welcome'));
+        expect(Theme.of(context).brightness, Brightness.dark);
+      },
+    );
   });
 }
