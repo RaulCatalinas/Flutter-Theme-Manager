@@ -31,8 +31,9 @@ import 'package:flutter_test/flutter_test.dart'
         isNot,
         setUp,
         testWidgets;
-import 'package:flutter_theme_manager/flutter_theme_manager.dart';
-import 'package:flutter_theme_manager/themed_app.dart';
+import 'package:flutter_theme_manager/flutter_theme_manager.dart'
+    show ThemeManager;
+import 'package:flutter_theme_manager/themed_app.dart' show ThemedApp;
 
 void main() {
   setUp(() async {
