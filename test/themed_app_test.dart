@@ -18,11 +18,6 @@ import 'package:flutter/material.dart'
         Theme,
         ThemeData,
         ValueListenableBuilder;
-import 'package:flutter_localizations/flutter_localizations.dart'
-    show
-        GlobalCupertinoLocalizations,
-        GlobalMaterialLocalizations,
-        GlobalWidgetsLocalizations;
 import 'package:flutter_test/flutter_test.dart'
     show
         WidgetTester,
@@ -36,14 +31,13 @@ import 'package:flutter_test/flutter_test.dart'
         isNot,
         setUp,
         testWidgets;
-import 'package:flutter_theme_manager/flutter_theme_manager.dart'
-    show ThemeManager;
-import 'package:flutter_theme_manager/src/themed_app.dart' show ThemedApp;
+import 'package:flutter_theme_manager/flutter_theme_manager.dart';
+import 'package:flutter_theme_manager/themed_app.dart';
 
 void main() {
   setUp(() async {
+    // Initialize ThemeManager before each test
     await ThemeManager.initialize();
-    ThemeManager.clearCustomThemes();
   });
 
   group('ThemedApp - Basic construction', () {
@@ -246,23 +240,18 @@ void main() {
       await tester.pumpWidget(
         ThemedApp(
           title: 'Test App',
-          locale: Locale('en'),
-          localizationsDelegates: [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
+          locale: Locale('es', 'ES'),
           supportedLocales: [
-            Locale('en'),
-            Locale('es'),
+            Locale('en', 'US'),
+            Locale('es', 'ES'),
           ],
           home: Scaffold(body: Text('Content')),
         ),
       );
 
       final MaterialApp app = tester.widget(find.byType(MaterialApp));
-      expect(app.locale, Locale('en'));
-      expect(app.supportedLocales, contains(Locale('es')));
+      expect(app.locale, Locale('es', 'ES'));
+      expect(app.supportedLocales, contains(Locale('es', 'ES')));
     });
   });
 
@@ -301,17 +290,15 @@ void main() {
         );
 
         await tester.pumpAndSettle();
-
         final initialBuildCount = buildCount;
 
+        // Pump without changing theme should not rebuild
         await tester.pump();
-
         expect(buildCount, initialBuildCount);
 
+        // Changing theme should rebuild
         ThemeManager.setTheme('dark');
-
-        await tester.pump();
-
+        await tester.pumpAndSettle();
         expect(buildCount, greaterThan(initialBuildCount));
       },
     );
