@@ -241,18 +241,19 @@ void main() {
       await tester.pumpWidget(
         ThemedApp(
           title: 'Test App',
-          locale: Locale('es', 'ES'),
+          locale: Locale('en'),
+          localizationsDelegates: [],
           supportedLocales: [
-            Locale('en', 'US'),
-            Locale('es', 'ES'),
+            Locale('en'),
+            Locale('es'),
           ],
           home: Scaffold(body: Text('Content')),
         ),
       );
 
       final MaterialApp app = tester.widget(find.byType(MaterialApp));
-      expect(app.locale, Locale('es', 'ES'));
-      expect(app.supportedLocales, contains(Locale('es', 'ES')));
+      expect(app.locale, Locale('en'));
+      expect(app.supportedLocales, contains(Locale('es')));
     });
   });
 

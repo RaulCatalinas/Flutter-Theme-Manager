@@ -48,7 +48,7 @@ class ThemedApp extends StatelessWidget {
     this.builder,
     this.locale,
     this.localizationsDelegates,
-    this.supportedLocales = const <Locale>[Locale('en', 'US')],
+    this.supportedLocales = const <Locale>[Locale('en')],
     this.debugShowCheckedModeBanner = true,
     this.debugShowMaterialGrid = false,
     this.showPerformanceOverlay = false,
