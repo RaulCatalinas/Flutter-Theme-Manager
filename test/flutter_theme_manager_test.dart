@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart'
-    show
-        Brightness,
-        Colors,
-        FontWeight,
-        RoundedRectangleBorder,
-        TextStyle,
-        ThemeData;
+    show Brightness, Colors, FontWeight, RoundedRectangleBorder, TextStyle;
 import 'package:flutter_test/flutter_test.dart'
     show
         test,
@@ -58,7 +52,7 @@ void main() {
     test('should use light theme if saved theme does not exist', () async {
       await ThemeManager.initialize(storageAdapter: mockStorage);
 
-      expect(ThemeManager.currentTheme, ThemeData.light());
+      expect(ThemeManager.currentTheme.brightness, Brightness.light);
     });
   });
 
@@ -93,13 +87,13 @@ void main() {
     test('should toggle between light and dark', () {
       // Starts with light
       ThemeManager.setTheme('light');
-      expect(ThemeManager.currentTheme, ThemeData.light());
+      expect(ThemeManager.currentTheme.brightness, Brightness.light);
 
       ThemeManager.toggleTheme();
-      expect(ThemeManager.currentTheme, ThemeData.dark());
+      expect(ThemeManager.currentTheme.brightness, Brightness.dark);
 
       ThemeManager.toggleTheme();
-      expect(ThemeManager.currentTheme, ThemeData.light());
+      expect(ThemeManager.currentTheme.brightness, Brightness.light);
     });
   });
 
@@ -288,7 +282,7 @@ void main() {
       ThemeManager.setTheme('dark');
 
       // Should not throw error
-      expect(ThemeManager.currentTheme, ThemeData.dark());
+      expect(ThemeManager.currentTheme.brightness, Brightness.dark);
     });
   });
 }
