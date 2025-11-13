@@ -82,8 +82,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_theme_manager/flutter_theme_manager.dart';
 
 void main() {
-    WidgetsFlutterBinding.ensureInitialized();
-
   // Create custom themes before running the app
   ThemeManager.createTheme(
     name: 'ocean',
