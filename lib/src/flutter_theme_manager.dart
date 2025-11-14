@@ -134,6 +134,16 @@ class ThemeManager {
     bool? useMaterial3,
     bool? useRippleEffect,
   }) {
+    if (name == 'light' || name == 'dark') {
+      throw Exception("Can't override default themes");
+    }
+
+    if (_instance._themes.containsKey(name)) {
+      throw Exception(
+        'Theme with name $name already exists, choose a different name',
+      );
+    }
+
     final isLight = brightness == Brightness.light;
 
     final theme = ThemeData(
