@@ -131,16 +131,57 @@ void main() {
       expect(ThemeManager.availableThemes, contains('custom'));
     });
 
+    test('should not overwrite default themes', () {
+      expect(
+        () => ThemeManager.createTheme(
+          name: 'light',
+          primaryColor: Colors.purple,
+          secondaryColor: Colors.amber,
+          brightness: Brightness.light,
+        ),
+        throwsException,
+      );
+
+      expect(
+        () => ThemeManager.createTheme(
+          name: 'dark',
+          primaryColor: Colors.purple,
+          secondaryColor: Colors.amber,
+          brightness: Brightness.dark,
+        ),
+        throwsException,
+      );
+    });
+
+    test('should not create multiple themes with the same name', () {
+      ThemeManager.createTheme(
+        name: 'duplicate',
+        primaryColor: Colors.purple,
+        secondaryColor: Colors.amber,
+        brightness: Brightness.light,
+      );
+
+      expect(
+        () => ThemeManager.createTheme(
+          name: 'duplicate',
+          primaryColor: Colors.green,
+          secondaryColor: Colors.red,
+          brightness: Brightness.dark,
+        ),
+        throwsException,
+      );
+    });
+
     test('should apply custom colors correctly', () {
       ThemeManager.createTheme(
-        name: 'custom',
+        name: 'custom_colors',
         primaryColor: Colors.purple,
         secondaryColor: Colors.amber,
         brightness: Brightness.light,
         scaffoldBackgroundColor: Colors.grey[100],
       );
 
-      ThemeManager.setTheme('custom');
+      ThemeManager.setTheme('custom_colors');
       final theme = ThemeManager.currentTheme;
 
       expect(theme.colorScheme.primary, Colors.purple);
@@ -179,16 +220,16 @@ void main() {
 
     test('should remove custom theme', () {
       ThemeManager.createTheme(
-        name: 'custom',
+        name: 'custom_to_remove',
         primaryColor: Colors.purple,
         secondaryColor: Colors.amber,
         brightness: Brightness.light,
       );
 
-      expect(ThemeManager.hasTheme('custom'), isTrue);
+      expect(ThemeManager.hasTheme('custom_to_remove'), isTrue);
 
-      ThemeManager.removeTheme('custom');
-      expect(ThemeManager.hasTheme('custom'), isFalse);
+      ThemeManager.removeTheme('custom_to_remove');
+      expect(ThemeManager.hasTheme('custom_to_remove'), isFalse);
     });
 
     test('should not allow removing default themes', () {
