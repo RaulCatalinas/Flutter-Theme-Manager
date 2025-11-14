@@ -7,8 +7,7 @@ A simple, plug-and-play theme management library for Flutter with automatic pers
 ✨ **Zero Configuration** - Works out of the box with light and dark themes  
 🔄 **Automatic Persistence** - Saves user theme preference automatically  
 🎨 **Unlimited Custom Themes** - Create as many themes as you need with a simple API  
-🚀 **Drop-in Replacement** - Just replace `MaterialApp` with `ThemedApp`  
-💾 **Built-in Storage** - Uses SharedPreferences internally, no setup needed  
+🚀 **Drop-in Replacement** - Just replace `MaterialApp` with `ThemedApp`
 ⚡ **Hot Reload Friendly** - See theme changes instantly during development
 
 ## Getting Started
@@ -211,7 +210,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_theme_manager/flutter_theme_manager.dart';
 
 void main() async {
-  await ThemeManager.initialize()
+  await ThemeManager.initialize();
 
   runApp(const MyApp())
 };
@@ -249,7 +248,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_theme_manager/flutter_theme_manager.dart';
 
 void main() async {
-  await ThemeManager.initialize()
+  await ThemeManager.initialize();
 
   // 🌊 Ocean theme
   ThemeManager.createTheme(
@@ -337,7 +336,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_theme_manager/flutter_theme_manager.dart';
 
 void main() async {
-  await ThemeManager.initialize()
+  await ThemeManager.initialize();
 
   ThemeManager.createTheme(
     name: 'professional',
