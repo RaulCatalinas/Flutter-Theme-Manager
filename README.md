@@ -34,7 +34,38 @@ flutter pub get
 import 'package:flutter/material.dart';
 import 'package:flutter_theme_manager/themed_app.dart';
 
-void main() {
+// ============================================================================
+// STORAGE ADAPTER (Optional - use your preferred storage)
+// ============================================================================
+
+/// Implement ThemeStorageAdapter with your preferred storage solution:
+/// - SharedPreferences: await prefs.setString('theme', themeName)
+/// - Hive: await box.put('theme', themeName)
+/// - GetStorage: await storage.write('theme', themeName)
+/// - Or any other storage you prefer
+class MyThemeStorage implements ThemeStorageAdapter {
+  String? _savedTheme;
+
+  @override
+  Future<void> saveTheme(String themeName) async {
+    _savedTheme = themeName;
+    // Replace with your storage logic
+  }
+
+  @override
+  Future<String?> loadTheme() async {
+    return _savedTheme;
+    // Replace with your storage logic
+  }
+}
+
+void main() async {
+  await ThemeManager.initialize(
+    storageAdapter:
+        MyThemeStorage(), // Remove the storageAdapter parameter if you don't need persistence.
+  );
+
+
   runApp(const MyApp());
 }
 
@@ -81,7 +112,37 @@ That's it! Your app now has automatic theme switching with persistent preference
 import 'package:flutter/material.dart';
 import 'package:flutter_theme_manager/flutter_theme_manager.dart';
 
-void main() {
+// ============================================================================
+// STORAGE ADAPTER (Optional - use your preferred storage)
+// ============================================================================
+
+/// Implement ThemeStorageAdapter with your preferred storage solution:
+/// - SharedPreferences: await prefs.setString('theme', themeName)
+/// - Hive: await box.put('theme', themeName)
+/// - GetStorage: await storage.write('theme', themeName)
+/// - Or any other storage you prefer
+class MyThemeStorage implements ThemeStorageAdapter {
+  String? _savedTheme;
+
+  @override
+  Future<void> saveTheme(String themeName) async {
+    _savedTheme = themeName;
+    // Replace with your storage logic
+  }
+
+  @override
+  Future<String?> loadTheme() async {
+    return _savedTheme;
+    // Replace with your storage logic
+  }
+}
+
+void main() async {
+  await ThemeManager.initialize(
+    storageAdapter:
+        MyThemeStorage(), // Remove the storageAdapter parameter if you don't need persistence.
+  );
+
   // Create custom themes before running the app
   ThemeManager.createTheme(
     name: 'ocean',
@@ -149,7 +210,11 @@ The simplest possible implementation - just replace MaterialApp:
 import 'package:flutter/material.dart';
 import 'package:flutter_theme_manager/flutter_theme_manager.dart';
 
-void main() => runApp(const MyApp());
+void main() async {
+  await ThemeManager.initialize()
+
+  runApp(const MyApp())
+};
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -183,7 +248,9 @@ Create multiple themed experiences for your app:
 import 'package:flutter/material.dart';
 import 'package:flutter_theme_manager/flutter_theme_manager.dart';
 
-void main() {
+void main() async {
+  await ThemeManager.initialize()
+
   // 🌊 Ocean theme
   ThemeManager.createTheme(
     name: 'ocean',
@@ -269,7 +336,9 @@ Full customization with typography, colors, and component styles:
 import 'package:flutter/material.dart';
 import 'package:flutter_theme_manager/flutter_theme_manager.dart';
 
-void main() {
+void main() async {
+  await ThemeManager.initialize()
+
   ThemeManager.createTheme(
     name: 'professional',
     
