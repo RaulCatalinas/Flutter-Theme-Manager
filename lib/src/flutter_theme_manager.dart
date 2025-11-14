@@ -94,7 +94,7 @@ class ThemeManager {
 
   static void removeTheme(String name) {
     if (name == 'light' || name == 'dark') {
-      throw Exception('Cannot remove default themes');
+      throw Exception("Can't remove default themes");
     }
 
     _instance._themes.remove(name);
