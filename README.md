@@ -1,14 +1,12 @@
 # Flutter Theme Manager
 
-A simple, plug-and-play theme management library for Flutter with automatic persistence and zero configuration required.
+A simple, plug-and-play theme management library for Flutter with optional persistence and zero configuration required.
 
 ## Features
 
 ✨ **Zero Configuration** - Works out of the box with light and dark themes  
-🔄 **Automatic Persistence** - Saves user theme preference automatically  
 🎨 **Unlimited Custom Themes** - Create as many themes as you need with a simple API  
 🚀 **Drop-in Replacement** - Just replace `MaterialApp` with `ThemedApp`
-⚡ **Hot Reload Friendly** - See theme changes instantly during development
 
 ## Getting Started
 
@@ -27,193 +25,17 @@ Then run:
 flutter pub get
 ```
 
-### Basic Usage
+## Quick Start
 
-```dart
-import 'package:flutter/material.dart';
-import 'package:flutter_theme_manager/themed_app.dart';
-
-// ============================================================================
-// STORAGE ADAPTER (Optional - use your preferred storage)
-// ============================================================================
-
-/// Implement ThemeStorageAdapter with your preferred storage solution:
-/// - SharedPreferences: await prefs.setString('theme', themeName)
-/// - Hive: await box.put('theme', themeName)
-/// - GetStorage: await storage.write('theme', themeName)
-/// - Or any other storage you prefer
-class MyThemeStorage implements ThemeStorageAdapter {
-  String? _savedTheme;
-
-  @override
-  Future<void> saveTheme(String themeName) async {
-    _savedTheme = themeName;
-    // Replace with your storage logic
-  }
-
-  @override
-  Future<String?> loadTheme() async {
-    return _savedTheme;
-    // Replace with your storage logic
-  }
-}
-
-void main() async {
-  await ThemeManager.initialize(
-    storageAdapter:
-        MyThemeStorage(), // Remove the storageAdapter parameter if you don't need persistence.
-  );
-
-
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ThemedApp(
-      title: 'My App',
-      home: const HomePage(),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Theme Manager Demo'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.dark_mode),
-            onPressed: () => ThemeManager.toggleTheme(),
-          ),
-        ],
-      ),
-      body: Center(
-        child: Text('Current theme: ${ThemeManager.currentThemeName}'),
-      ),
-    );
-  }
-}
-```
-
-That's it! Your app now has automatic theme switching with persistent preferences.
-
-## Complete Example
+The simplest possible implementation - just replace MaterialApp with ThemedApp:
 
 ```dart
 import 'package:flutter/material.dart';
 import 'package:flutter_theme_manager/flutter_theme_manager.dart';
 
-// ============================================================================
-// STORAGE ADAPTER (Optional - use your preferred storage)
-// ============================================================================
-
-/// Implement ThemeStorageAdapter with your preferred storage solution:
-/// - SharedPreferences: await prefs.setString('theme', themeName)
-/// - Hive: await box.put('theme', themeName)
-/// - GetStorage: await storage.write('theme', themeName)
-/// - Or any other storage you prefer
-class MyThemeStorage implements ThemeStorageAdapter {
-  String? _savedTheme;
-
-  @override
-  Future<void> saveTheme(String themeName) async {
-    _savedTheme = themeName;
-    // Replace with your storage logic
-  }
-
-  @override
-  Future<String?> loadTheme() async {
-    return _savedTheme;
-    // Replace with your storage logic
-  }
-}
-
-void main() async {
-  await ThemeManager.initialize(
-    storageAdapter:
-        MyThemeStorage(), // Remove the storageAdapter parameter if you don't need persistence.
-  );
-
-  // Create custom themes before running the app
-  ThemeManager.createTheme(
-    name: 'ocean',
-    primaryColor: Colors.blue[800]!,
-    secondaryColor: Colors.lightBlue,
-    brightness: Brightness.light,
-  );
-
-  ThemeManager.createTheme(
-    name: 'forest',
-    primaryColor: Colors.green[700]!,
-    secondaryColor: Colors.lightGreen,
-    brightness: Brightness.dark,
-    scaffoldBackgroundColor: const Color(0xFF1A2F1A),
-  );
-
+void main() {
   runApp(const MyApp());
 }
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ThemedApp(
-      title: 'Theme Gallery',
-      home: const ThemeSelector(),
-    );
-  }
-}
-
-class ThemeSelector extends StatelessWidget {
-  const ThemeSelector({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Select Theme')),
-      body: ListView.builder(
-        itemCount: ThemeManager.availableThemes.length,
-        itemBuilder: (context, index) {
-          final themeName = ThemeManager.availableThemes[index];
-          final isSelected = ThemeManager.currentThemeName == themeName;
-
-          return ListTile(
-            title: Text(themeName),
-            trailing: isSelected ? const Icon(Icons.check) : null,
-            selected: isSelected,
-            onTap: () => ThemeManager.setTheme(themeName),
-          );
-        },
-      ),
-    );
-  }
-}
-```
-
-## Additional Examples
-
-### 🔹 Minimal Setup Example
-
-The simplest possible implementation - just replace MaterialApp:
-
-```dart
-import 'package:flutter/material.dart';
-import 'package:flutter_theme_manager/flutter_theme_manager.dart';
-
-void main() async {
-  await ThemeManager.initialize();
-
-  runApp(const MyApp())
-};
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -224,7 +46,7 @@ class MyApp extends StatelessWidget {
       title: 'My App',
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Minimal Example'),
+          title: const Text('Theme Manager'),
           actions: [
             IconButton(
               icon: const Icon(Icons.palette),
@@ -232,14 +54,61 @@ class MyApp extends StatelessWidget {
             ),
           ],
         ),
-        body: const Center(child: Text('Hello, World!')),
+        body: Center(
+          child: Text('Current theme: ${ThemeManager.currentThemeName}'),
+        ),
       ),
     );
   }
 }
 ```
 
-### 🔹 Custom Themes Example
+That's it! Your app now supports light and dark themes with a single button.
+
+## Storage Adapter (Optional)
+
+To persist theme preferences across app restarts, implement `ThemeStorageAdapter` with your preferred storage solution:
+
+```dart
+/// Example: In-memory storage (no persistence)
+/// Replace with SharedPreferences, Hive, GetStorage, or any other solution
+class MyThemeStorage implements ThemeStorageAdapter {
+  String? _savedTheme;
+
+  @override
+  Future<void> saveTheme(String themeName) async {
+    _savedTheme = themeName;
+    // Your storage logic here:
+    // - SharedPreferences: await prefs.setString('theme', themeName)
+    // - Hive: await box.put('theme', themeName)
+    // - GetStorage: await storage.write('theme', themeName)
+  }
+
+  @override
+  Future<String?> loadTheme() async {
+    return _savedTheme;
+    // Your storage logic here:
+    // - SharedPreferences: return prefs.getString('theme')
+    // - Hive: return box.get('theme')
+    // - GetStorage: return storage.read('theme')
+  }
+}
+
+void main() async {
+  // Only needed if using native plugins (SharedPreferences, Hive, etc.)
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await ThemeManager.initialize(
+    storageAdapter: MyThemeStorage(), // Optional: remove if you don't need persistence
+  );
+
+  runApp(const MyApp());
+}
+```
+
+**Note:** The storage adapter is completely optional. Without it, the library still works but won't persist theme preferences between app restarts. Uncomment `WidgetsFlutterBinding.ensureInitialized()` only if your storage uses native plugins (SharedPreferences, Hive, etc.).
+
+## Custom Themes
 
 Create multiple themed experiences for your app:
 
@@ -327,60 +196,9 @@ class HomePage extends StatelessWidget {
 }
 ```
 
-### 🔹 Advanced Configuration Example
-
-Full customization with typography, colors, and component styles:
-
-```dart
-import 'package:flutter/material.dart';
-import 'package:flutter_theme_manager/flutter_theme_manager.dart';
-
-void main() async {
-  await ThemeManager.initialize();
-
-  ThemeManager.createTheme(
-    name: 'professional',
-    
-    // Main colors
-    primaryColor: const Color(0xFF2C3E50),
-    secondaryColor: const Color(0xFF3498DB),
-    brightness: Brightness.light,
-    
-    // Background colors
-    scaffoldBackgroundColor: const Color(0xFFF5F7FA),
-    cardColor: Colors.white,
-    
-    // Component styling
-    borderRadius: 16,
-    elevation: 4,
-    
-    // AppBar customization
-    appBarColor: const Color(0xFF2C3E50),
-    
-    // Button colors
-    buttonColor: const Color(0xFF3498DB),
-    fabColor: const Color(0xFF3498DB),
-    
-    // Input fields
-    inputFillColor: Colors.white,
-    inputBorderColor: const Color(0xFFE0E0E0),
-    
-    // Typography
-    fontFamily: 'Roboto',
-    fontWeight: FontWeight.w500,
-    
-    // Effects
-    useMaterial3: true,
-    useRippleEffect: true,
-  );
-
-  runApp(const MyApp());
-}
-```
-
 ## Creating Custom Themes
 
-ThemeManager provides a simple API to create custom themes. Only three parameters are required:
+ThemeManager provides a simple API to create custom themes. Only four parameters are required:
 
 ```dart
 ThemeManager.createTheme(
@@ -388,7 +206,20 @@ ThemeManager.createTheme(
   primaryColor: Colors.blue,      // Required: main app color
   secondaryColor: Colors.blueAccent, // Required: accent color
   brightness: Brightness.light,   // Required: light or dark
-  // ... all other parameters are optional
+  
+  // All other parameters are optional:
+  scaffoldBackgroundColor: Colors.white,
+  cardColor: Colors.grey[100],
+  appBarColor: Colors.blue,
+  buttonColor: Colors.blue,
+  fabColor: Colors.blue,
+  borderRadius: 16,
+  elevation: 4,
+  fontFamily: 'Roboto',
+  fontWeight: FontWeight.w500,
+  useMaterial3: true,
+  useRippleEffect: true,
+  // ... and many more
 );
 ```
 
@@ -403,23 +234,58 @@ ThemedApp(
   title: 'My App',
   home: HomePage(),
   routes: {...},
-  theme: ..., // Don't use this - ThemeManager handles it
-  darkTheme: ..., // Don't use this - ThemeManager handles it
+  // Don't use theme or darkTheme - ThemeManager handles them
   // ... all other MaterialApp parameters work normally
 )
 ```
 
-**Note:** Do not set `theme` or `darkTheme` parameters manually as ThemeManager controls these automatically.
+**Important:** Do not set `theme` or `darkTheme` parameters manually as ThemeManager controls these automatically.
+
+### ThemeManager Methods
+
+```dart
+// Initialize (optional, but required for storage)
+await ThemeManager.initialize(storageAdapter: MyStorage());
+
+// Create a custom theme
+ThemeManager.createTheme(
+  name: 'custom',
+  primaryColor: Colors.purple,
+  secondaryColor: Colors.purpleAccent,
+  brightness: Brightness.dark,
+);
+
+// Switch themes
+ThemeManager.setTheme('custom');
+
+// Toggle between light and dark
+ThemeManager.toggleTheme();
+
+// Check available themes
+List<String> themes = ThemeManager.availableThemes;
+
+// Get current theme
+String currentName = ThemeManager.currentThemeName;
+ThemeData currentTheme = ThemeManager.currentTheme;
+
+// Check if theme exists
+bool exists = ThemeManager.hasTheme('ocean');
+
+// Remove custom themes (cannot remove 'light' or 'dark')
+ThemeManager.removeTheme('custom');
+ThemeManager.clearCustomThemes();
+```
 
 ## Best Practices
 
-### Create Themes Before runApp
+### 1. Create Themes Before runApp
 
 Define all your custom themes in `main()` before calling `runApp()`:
 
 ```dart
-void main() {
-  // Create themes first
+void main() async {
+  await ThemeManager.initialize();
+  
   ThemeManager.createTheme(
     name: 'custom',
     primaryColor: Colors.purple,
@@ -427,12 +293,11 @@ void main() {
     brightness: Brightness.dark,
   );
   
-  // Then run app
   runApp(const MyApp());
 }
 ```
 
-### Use Descriptive Theme Names
+### 2. Use Descriptive Theme Names
 
 Choose clear, meaningful names for your themes:
 
@@ -444,7 +309,7 @@ ThemeManager.createTheme(name: 'theme1', ...);
 ThemeManager.createTheme(name: 'ocean_breeze', ...);
 ```
 
-### Provide Visual Feedback
+### 3. Provide Visual Feedback
 
 Show users which theme is currently active:
 
@@ -458,15 +323,15 @@ ListTile(
 )
 ```
 
-### Handle Theme Changes Gracefully
+### 4. Access Theme Anywhere
 
-Theme changes are automatic, but you can react to them if needed:
+Theme data is accessible throughout your widget tree:
 
 ```dart
-// Access theme anywhere in your widget tree
+// Using ThemeManager
 final isDark = ThemeManager.currentTheme.brightness == Brightness.dark;
 
-// Or use Theme.of(context) as usual
+// Using Theme.of(context) as usual
 final primaryColor = Theme.of(context).primaryColor;
 ```
 
@@ -474,11 +339,22 @@ final primaryColor = Theme.of(context).primaryColor;
 
 ### How does persistence work?
 
-Flutter Theme Manager automatically saves the selected theme using SharedPreferences. When your app restarts, it loads the last selected theme automatically.
+Flutter Theme Manager supports persistence only when you provide a `ThemeStorageAdapter`.
+
+**If a ThemeStorageAdapter is provided:**
+- The selected theme is saved whenever it changes
+- When the app starts, the previously saved theme is automatically loaded
+- If no theme was saved yet, the default is light
+
+**If no adapter is provided:**
+- The selected theme is not persisted
+- The app always starts with the default light theme
 
 ### Can I use it without SharedPreferences?
 
-Yes! If SharedPreferences is not available, the library will still work but won't persist theme choices between app restarts.
+Yes! You can store themes using any solution that implements `ThemeStorageAdapter` (e.g., SharedPreferences, Hive, GetStorage, SQLite, custom solutions, etc.).
+
+If you don't provide an adapter, the library still works — just without persistence.
 
 ### Does it work with MaterialApp.router?
 
@@ -488,13 +364,13 @@ Currently, Flutter Theme Manager only supports the standard `MaterialApp`. Suppo
 
 Absolutely! Use `ThemeManager.setTheme('themeName')` from anywhere in your code - no BuildContext required.
 
-### What happens to my custom themes on hot reload?
-
-Custom themes persist during hot reload, so you can see your changes immediately without losing your theme configuration.
-
 ### Can I override the default light/dark themes?
 
-The default 'light' and 'dark' themes cannot be removed, but you can create themes with the same names to replace them.
+No. The built-in `light` and `dark` themes cannot be replaced or modified.
+
+This is intentional to avoid conflicts with Flutter's own `ThemeData.light()` and `ThemeData.dark()`.
+
+You can still create unlimited custom themes (e.g., `ocean`, `sunset`, `my_dark`).
 
 ## Roadmap
 
@@ -504,7 +380,6 @@ Future features under consideration:
 - 📱 System theme detection
 - 🎨 Theme presets library
 - 🌙 Automatic dark mode scheduling
-- 💾 Custom storage adapters
 - 🎯 Theme inheritance
 
 ## Contributing
@@ -517,7 +392,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-If you encounter any issues or have questions, please [open an issue](hhttps://github.com/RaulCatalinas/Flutter-Theme-Manager/issues) on GitHub.
+If you encounter any issues or have questions, please [open an issue](https://github.com/RaulCatalinas/Flutter-Theme-Manager/issues) on GitHub.
 
 ## Changelog
 
