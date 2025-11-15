@@ -50,12 +50,12 @@ class MyApp extends StatelessWidget {
           actions: [
             IconButton(
               icon: const Icon(Icons.palette),
-              onPressed: () => ThemeManager.toggleTheme(),
+              onPressed: () => Themed.toggleTheme(),
             ),
           ],
         ),
         body: Center(
-          child: Text('Current theme: ${ThemeManager.currentThemeName}'),
+          child: Text('Current theme: ${Themed.currentThemeName}'),
         ),
       ),
     );
@@ -98,7 +98,7 @@ void main() async {
   // Only needed if using native plugins (SharedPreferences, Hive, etc.)
   WidgetsFlutterBinding.ensureInitialized();
 
-  await ThemeManager.initialize(
+  await Themed.initialize(
     storageAdapter: MyThemeStorage(), // Optional: remove if you don't need persistence
   );
 
@@ -117,10 +117,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_theme_manager/flutter_theme_manager.dart';
 
 void main() async {
-  await ThemeManager.initialize();
+  await Themed.initialize();
 
   // 🌊 Ocean theme
-  ThemeManager.createTheme(
+  Themed.createTheme(
     name: 'ocean',
     primaryColor: const Color(0xFF006994),
     secondaryColor: const Color(0xFF4A90A4),
@@ -129,7 +129,7 @@ void main() async {
   );
 
   // 🌲 Forest theme
-  ThemeManager.createTheme(
+  Themed.createTheme(
     name: 'forest',
     primaryColor: const Color(0xFF2E7D32),
     secondaryColor: const Color(0xFF66BB6A),
@@ -139,7 +139,7 @@ void main() async {
   );
 
   // 🌸 Rose theme
-  ThemeManager.createTheme(
+  Themed.createTheme(
     name: 'rose',
     primaryColor: Colors.pink[400]!,
     secondaryColor: Colors.pinkAccent,
@@ -177,13 +177,13 @@ class HomePage extends StatelessWidget {
           crossAxisSpacing: 12,
           mainAxisSpacing: 12,
         ),
-        itemCount: ThemeManager.availableThemes.length,
+        itemCount: Themed.availableThemes.length,
         itemBuilder: (context, index) {
-          final theme = ThemeManager.availableThemes[index];
-          final isCurrent = ThemeManager.currentThemeName == theme;
+          final theme = Themed.availableThemes[index];
+          final isCurrent = Themed.currentThemeName == theme;
 
           return ElevatedButton(
-            onPressed: () => ThemeManager.setTheme(theme),
+            onPressed: () => Themed.setTheme(theme),
             style: ElevatedButton.styleFrom(
               backgroundColor: isCurrent ? Theme.of(context).primaryColor : null,
             ),
@@ -198,10 +198,10 @@ class HomePage extends StatelessWidget {
 
 ## Creating Custom Themes
 
-ThemeManager provides a simple API to create custom themes. Only four parameters are required:
+Themed provides a simple API to create custom themes. Only four parameters are required:
 
 ```dart
-ThemeManager.createTheme(
+Themed.createTheme(
   name: 'my_theme',              // Required: unique identifier
   primaryColor: Colors.blue,      // Required: main app color
   secondaryColor: Colors.blueAccent, // Required: accent color
@@ -234,21 +234,21 @@ ThemedApp(
   title: 'My App',
   home: HomePage(),
   routes: {...},
-  // Don't use theme or darkTheme - ThemeManager handles them
+  // Don't use theme or darkTheme - Themed handles them
   // ... all other MaterialApp parameters work normally
 )
 ```
 
-**Important:** Do not set `theme` or `darkTheme` parameters manually as ThemeManager controls these automatically.
+**Important:** Do not set `theme` or `darkTheme` parameters manually as Themed controls these automatically.
 
-### ThemeManager Methods
+### Themed Methods
 
 ```dart
 // Initialize (optional, but required for storage)
-await ThemeManager.initialize(storageAdapter: MyStorage());
+await Themed.initialize(storageAdapter: MyStorage());
 
 // Create a custom theme
-ThemeManager.createTheme(
+Themed.createTheme(
   name: 'custom',
   primaryColor: Colors.purple,
   secondaryColor: Colors.purpleAccent,
@@ -256,24 +256,24 @@ ThemeManager.createTheme(
 );
 
 // Switch themes
-ThemeManager.setTheme('custom');
+Themed.setTheme('custom');
 
 // Toggle between light and dark
-ThemeManager.toggleTheme();
+Themed.toggleTheme();
 
 // Check available themes
-List<String> themes = ThemeManager.availableThemes;
+List<String> themes = Themed.availableThemes;
 
 // Get current theme
-String currentName = ThemeManager.currentThemeName;
-ThemeData currentTheme = ThemeManager.currentTheme;
+String currentName = Themed.currentThemeName;
+ThemeData currentTheme = Themed.currentTheme;
 
 // Check if theme exists
-bool exists = ThemeManager.hasTheme('ocean');
+bool exists = Themed.hasTheme('ocean');
 
 // Remove custom themes (cannot remove 'light' or 'dark')
-ThemeManager.removeTheme('custom');
-ThemeManager.clearCustomThemes();
+Themed.removeTheme('custom');
+Themed.clearCustomThemes();
 ```
 
 ## Best Practices
@@ -284,9 +284,9 @@ Define all your custom themes in `main()` before calling `runApp()`:
 
 ```dart
 void main() async {
-  await ThemeManager.initialize();
+  await Themed.initialize();
   
-  ThemeManager.createTheme(
+  Themed.createTheme(
     name: 'custom',
     primaryColor: Colors.purple,
     secondaryColor: Colors.purpleAccent,
@@ -303,10 +303,10 @@ Choose clear, meaningful names for your themes:
 
 ```dart
 // ❌ Bad
-ThemeManager.createTheme(name: 'theme1', ...);
+Themed.createTheme(name: 'theme1', ...);
 
 // ✅ Good
-ThemeManager.createTheme(name: 'ocean_breeze', ...);
+Themed.createTheme(name: 'ocean_breeze', ...);
 ```
 
 ### 3. Provide Visual Feedback
@@ -316,10 +316,10 @@ Show users which theme is currently active:
 ```dart
 ListTile(
   title: Text(themeName),
-  trailing: ThemeManager.currentThemeName == themeName 
+  trailing: Themed.currentThemeName == themeName 
     ? const Icon(Icons.check) 
     : null,
-  onTap: () => ThemeManager.setTheme(themeName),
+  onTap: () => Themed.setTheme(themeName),
 )
 ```
 
@@ -328,8 +328,8 @@ ListTile(
 Theme data is accessible throughout your widget tree:
 
 ```dart
-// Using ThemeManager
-final isDark = ThemeManager.currentTheme.brightness == Brightness.dark;
+// Using Themed
+final isDark = Themed.currentTheme.brightness == Brightness.dark;
 
 // Using Theme.of(context) as usual
 final primaryColor = Theme.of(context).primaryColor;
@@ -362,7 +362,7 @@ Currently, Flutter Theme Manager only supports the standard `MaterialApp`. Suppo
 
 ### Can I change themes programmatically?
 
-Absolutely! Use `ThemeManager.setTheme('themeName')` from anywhere in your code - no BuildContext required.
+Absolutely! Use `Themed.setTheme('themeName')` from anywhere in your code - no BuildContext required.
 
 ### Can I override the default light/dark themes?
 

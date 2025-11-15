@@ -13,15 +13,15 @@ import 'package:flutter/material.dart'
         Widget,
         WidgetBuilder;
 
-import 'flutter_theme_manager.dart' show ThemeManager;
+import 'flutter_themed.dart' show Themed;
 
 /// A drop-in replacement for [MaterialApp] that automatically handles theme changes.
 ///
-/// ThemedApp wraps [MaterialApp] and listens to [ThemeManager] for theme updates.
+/// ThemedApp wraps [MaterialApp] and listens to [Themed] for theme updates.
 /// All standard [MaterialApp] parameters are supported.
 ///
 /// **Important:** Do not set [MaterialApp.theme] or [MaterialApp.darkTheme]
-/// manually, as [ThemeManager] controls these automatically.
+/// manually, as [Themed] controls these automatically.
 class ThemedApp extends StatelessWidget {
   /// The title of the application.
   ///
@@ -106,7 +106,7 @@ class ThemedApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<ThemeData>(
-      valueListenable: ThemeManager.instance.themeNotifier,
+      valueListenable: Themed.instance.themeNotifier,
       builder: (context, theme, _) {
         return MaterialApp(
           title: title,

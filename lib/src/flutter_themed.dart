@@ -34,33 +34,33 @@ import 'package:flutter/material.dart'
 abstract class ThemeStorageAdapter {
   /// Saves the selected theme name to persistent storage.
   ///
-  /// Called automatically whenever the theme changes via [ThemeManager.setTheme]
-  /// or [ThemeManager.toggleTheme].
+  /// Called automatically whenever the theme changes via [Themed.setTheme]
+  /// or [Themed.toggleTheme].
   Future<void> saveTheme(String themeName);
 
   /// Loads the previously saved theme name from persistent storage.
   ///
-  /// Called once during [ThemeManager.initialize]. Return `null` if no
+  /// Called once during [Themed.initialize]. Return `null` if no
   /// theme was previously saved.
   Future<String?> loadTheme();
 }
 
 /// Manages theme switching and persistence for Flutter applications.
 ///
-/// ThemeManager is a singleton that handles:
+/// Themed is a singleton that handles:
 /// - Built-in light and dark themes
 /// - Custom theme creation and management
 /// - Automatic theme persistence (when storage adapter is provided)
 /// - Reactive theme updates via [ValueNotifier]
-class ThemeManager {
-  static final ThemeManager _instance = ThemeManager._internal();
+class Themed {
+  static final Themed _instance = Themed._internal();
   late ValueNotifier<ThemeData> themeNotifier;
   final Map<String, ThemeData> _themes = {};
   String _currentThemeName = 'light';
   ThemeStorageAdapter? _storageAdapter;
 
-  /// Returns the singleton instance of ThemeManager.
-  static ThemeManager get instance => _instance;
+  /// Returns the singleton instance of Themed.
+  static Themed get instance => _instance;
 
   /// Returns the currently active [ThemeData].
   static ThemeData get currentTheme => _instance.themeNotifier.value;
@@ -78,15 +78,15 @@ class ThemeManager {
   /// Returns `true` if the theme exists, `false` otherwise.
   static bool hasTheme(String name) => _instance._themes.containsKey(name);
 
-  factory ThemeManager() => _instance;
+  factory Themed() => _instance;
 
-  ThemeManager._internal() {
+  Themed._internal() {
     _themes['light'] = ThemeData.light();
     _themes['dark'] = ThemeData.dark();
     themeNotifier = ValueNotifier(_themes['light']!);
   }
 
-  /// Initializes ThemeManager with optional persistent storage.
+  /// Initializes Themed with optional persistent storage.
   ///
   /// Should be called before [runApp]. If [storageAdapter] is provided, loads the saved theme and persists future changes.
   static Future<void> initialize({ThemeStorageAdapter? storageAdapter}) async {

@@ -11,13 +11,12 @@ import 'package:flutter/material.dart'
         Theme;
 import 'package:flutter_test/flutter_test.dart'
     show WidgetTester, expect, find, findsOneWidget, group, setUp, testWidgets;
-import 'package:flutter_theme_manager/flutter_theme_manager.dart'
-    show ThemeManager;
-import 'package:flutter_theme_manager/themed_app.dart' show ThemedApp;
+import 'package:flutter_themed/flutter_themed.dart' show Themed;
+import 'package:flutter_themed/themed_app.dart' show ThemedApp;
 
 void main() {
   setUp(() async {
-    await ThemeManager.initialize();
+    await Themed.initialize();
   });
 
   group('ThemedApp', () {
@@ -34,9 +33,9 @@ void main() {
     });
 
     testWidgets(
-      'should use current theme from ThemeManager',
+      'should use current theme from Themed',
       (WidgetTester tester) async {
-        ThemeManager.setTheme('light');
+        Themed.setTheme('light');
 
         await tester.pumpWidget(
           ThemedApp(
@@ -59,7 +58,7 @@ void main() {
     testWidgets(
       'should react to theme changes',
       (WidgetTester tester) async {
-        ThemeManager.setTheme('light');
+        Themed.setTheme('light');
 
         await tester.pumpWidget(
           ThemedApp(
@@ -78,7 +77,7 @@ void main() {
         expect(Theme.of(context).brightness, Brightness.light);
 
         // Change theme
-        ThemeManager.setTheme('dark');
+        Themed.setTheme('dark');
         await tester.pumpAndSettle();
 
         context = tester.element(find.text('Content'));
@@ -89,14 +88,14 @@ void main() {
     testWidgets(
       'should apply custom theme colors',
       (WidgetTester tester) async {
-        ThemeManager.createTheme(
+        Themed.createTheme(
           name: 'custom',
           primaryColor: Colors.purple,
           secondaryColor: Colors.amber,
           brightness: Brightness.light,
         );
 
-        ThemeManager.setTheme('custom');
+        Themed.setTheme('custom');
 
         await tester.pumpWidget(
           ThemedApp(
@@ -139,7 +138,7 @@ void main() {
     testWidgets(
       'should maintain theme during navigation',
       (WidgetTester tester) async {
-        ThemeManager.setTheme('dark');
+        Themed.setTheme('dark');
 
         await tester.pumpWidget(
           ThemedApp(

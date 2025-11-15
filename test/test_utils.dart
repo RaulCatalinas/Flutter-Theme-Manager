@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'dart:io' show File;
 
-import 'package:flutter_theme_manager/flutter_theme_manager.dart'
-    show ThemeStorageAdapter;
+import 'package:flutter_themed/flutter_themed.dart' show ThemeStorageAdapter;
 
 class MockThemeStorageAdapter implements ThemeStorageAdapter {
   int saveCallCount = 0;

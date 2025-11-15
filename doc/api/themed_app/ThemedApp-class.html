@@ -24,7 +24,7 @@
 <header id="title">
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
-    <li><a href="../index.html">flutter_theme_manager</a></li>
+    <li><a href="../index.html">flutter_themed</a></li>
     <li><a href="../themed_app/">themed_app.dart</a></li>
     <li class="self-crumb">ThemedApp class</li>
   </ol>
@@ -53,6 +53,13 @@
 </h1></div>
 
     
+<section class="desc markdown">
+  <p>A drop-in replacement for <a href="https://api.flutter.dev/flutter/material/MaterialApp-class.html">MaterialApp</a> that automatically handles theme changes.</p>
+<p>ThemedApp wraps <a href="https://api.flutter.dev/flutter/material/MaterialApp-class.html">MaterialApp</a> and listens to <a href="../flutter_themed/Themed-class.html">Themed</a> for theme updates.
+All standard <a href="https://api.flutter.dev/flutter/material/MaterialApp-class.html">MaterialApp</a> parameters are supported.</p>
+<p><strong>Important:</strong> Do not set <a href="https://api.flutter.dev/flutter/material/MaterialApp/theme.html">MaterialApp.theme</a> or <a href="https://api.flutter.dev/flutter/material/MaterialApp/darkTheme.html">MaterialApp.darkTheme</a>
+manually, as <a href="../flutter_themed/Themed-class.html">Themed</a> controls these automatically.</p>
+</section>
 
 
     <section>
@@ -106,7 +113,7 @@
 
 </dt>
 <dd>
-  
+  A builder that can wrap the app's widgets.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -118,7 +125,7 @@
 
 </dt>
 <dd>
-  
+  Whether to checkerboard offscreen layers.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -130,7 +137,7 @@
 
 </dt>
 <dd>
-  
+  Whether to checkerboard raster cache images.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -142,7 +149,7 @@
 
 </dt>
 <dd>
-  
+  Whether to show the debug banner in debug mode.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -154,7 +161,7 @@
 
 </dt>
 <dd>
-  
+  Whether to show the material grid in debug mode.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -166,7 +173,7 @@
 
 </dt>
 <dd>
-  
+  Optional font family to apply to all text in the theme.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -190,7 +197,7 @@
 
 </dt>
 <dd>
-  
+  The widget for the default route of the app.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -202,7 +209,7 @@
 
 </dt>
 <dd>
-  
+  The name of the first route to show.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -226,7 +233,7 @@
 
 </dt>
 <dd>
-  
+  The locale for this app.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -238,7 +245,7 @@
 
 </dt>
 <dd>
-  
+  The delegates for this app's localization.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -250,7 +257,7 @@
 
 </dt>
 <dd>
-  
+  The list of observers for the <a href="https://api.flutter.dev/flutter/widgets/Navigator-class.html">Navigator</a> created for this app.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -262,7 +269,7 @@
 
 </dt>
 <dd>
-  
+  The route generator callback for when <a href="../themed_app/ThemedApp/routes.html">routes</a> doesn't contain a route.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -274,7 +281,7 @@
 
 </dt>
 <dd>
-  
+  Called when <a href="../themed_app/ThemedApp/onGenerateRoute.html">onGenerateRoute</a> fails to generate a route.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -286,7 +293,7 @@
 
 </dt>
 <dd>
-  
+  The application's top-level routing table.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -310,7 +317,7 @@
 
 </dt>
 <dd>
-  
+  Whether to show the performance overlay.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -322,7 +329,7 @@
 
 </dt>
 <dd>
-  
+  Whether to show the semantics debugger.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -334,7 +341,7 @@
 
 </dt>
 <dd>
-  
+  The list of locales that this app has been localized for.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -346,7 +353,7 @@
 
 </dt>
 <dd>
-  
+  The title of the application.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -528,7 +535,7 @@ tools and by <a href="https://api.flutter.dev/flutter/foundation/DiagnosticsNode
   </form>
 </header>
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
-    <li><a href="../index.html">flutter_theme_manager</a></li>
+    <li><a href="../index.html">flutter_themed</a></li>
     <li><a href="../themed_app/">themed_app</a></li>
     <li class="self-crumb">ThemedApp class</li>
 </ol>
@@ -541,7 +548,7 @@ tools and by <a href="https://api.flutter.dev/flutter/foundation/DiagnosticsNode
 </main>
 <footer>
   <span class="no-break">
-    flutter_theme_manager
+    flutter_themed
       1.0.0
   </span>
   

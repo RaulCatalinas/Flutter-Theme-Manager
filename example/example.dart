@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_theme_manager/flutter_theme_manager.dart';
-import 'package:flutter_theme_manager/themed_app.dart';
+import 'package:flutter_themed/flutter_themed.dart';
+import 'package:flutter_themed/themed_app.dart';
 
 // ============================================================================
 // STORAGE ADAPTER (Optional - use your preferred storage)
@@ -31,12 +31,12 @@ void main() async {
   // Only necessary if you use native plugins:
   WidgetsFlutterBinding.ensureInitialized();
 
-  await ThemeManager.initialize(
+  await Themed.initialize(
     storageAdapter:
         MyThemeStorage(), // Remove the storageAdapter parameter if you don't need persistence.
   );
 
-  ThemeManager.createTheme(
+  Themed.createTheme(
     name: 'ocean',
     primaryColor: const Color(0xFF006994),
     secondaryColor: const Color(0xFF4A90A4),
@@ -44,7 +44,7 @@ void main() async {
     borderRadius: 16,
   );
 
-  ThemeManager.createTheme(
+  Themed.createTheme(
     name: 'sunset',
     primaryColor: Colors.deepOrange,
     secondaryColor: Colors.amber,
@@ -77,11 +77,11 @@ class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(
-              ThemeManager.currentTheme.brightness == Brightness.light
+              Themed.currentTheme.brightness == Brightness.light
                   ? Icons.dark_mode
                   : Icons.light_mode,
             ),
-            onPressed: () => ThemeManager.toggleTheme(),
+            onPressed: () => Themed.toggleTheme(),
           ),
         ],
       ),
@@ -100,7 +100,7 @@ class HomePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    ThemeManager.currentThemeName.toUpperCase(),
+                    Themed.currentThemeName.toUpperCase(),
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -115,8 +115,8 @@ class HomePage extends StatelessWidget {
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 12),
-          ...ThemeManager.availableThemes.map((theme) {
-            final isCurrent = ThemeManager.currentThemeName == theme;
+          ...Themed.availableThemes.map((theme) {
+            final isCurrent = Themed.currentThemeName == theme;
             return Card(
               child: ListTile(
                 leading: Icon(
@@ -125,7 +125,7 @@ class HomePage extends StatelessWidget {
                 ),
                 title: Text(theme),
                 trailing: isCurrent ? const Icon(Icons.check_circle) : null,
-                onTap: () => ThemeManager.setTheme(theme),
+                onTap: () => Themed.setTheme(theme),
               ),
             );
           }),
