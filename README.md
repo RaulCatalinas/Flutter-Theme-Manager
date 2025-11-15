@@ -1,4 +1,4 @@
-# Flutter Theme Manager
+# Flutter Themed
 
 A simple, plug-and-play theme management library for Flutter with optional persistence and zero configuration required.
 
@@ -16,7 +16,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  flutter_themed: ^1.0.0+1
+  flutter_themed: ^1.0.0+2
 ```
 
 Then run:
@@ -31,7 +31,7 @@ The simplest possible implementation - just replace MaterialApp with ThemedApp:
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:flutter_theme_manager/flutter_theme_manager.dart';
+import 'package:flutter_themed/flutter_themed.dart';
 
 void main() {
   runApp(const MyApp());
@@ -114,7 +114,7 @@ Create multiple themed experiences for your app:
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:flutter_theme_manager/flutter_theme_manager.dart';
+import 'package:flutter_themed/flutter_themed.dart';
 
 void main() async {
   await Themed.initialize();
