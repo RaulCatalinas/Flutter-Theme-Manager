@@ -11,3 +11,7 @@
 ## 1.0.0+2
 
 - Updated documentation.
+
+## 1.0.0+3
+
+- Improved package description for clarity.
